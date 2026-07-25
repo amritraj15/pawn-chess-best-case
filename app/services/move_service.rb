@@ -2,7 +2,7 @@ class MoveService
   def initialize(board)
     @board = board
     @validator = MoveValidator.new(board)
-    @evaluator = Computer::HeuristicEvaluator.new
+    @evaluator = Computer::HeuristicEvaluator.new(board)
   end
 
   def next_move(color)
