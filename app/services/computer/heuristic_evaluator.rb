@@ -64,5 +64,41 @@ module Computer
           enemy_move.to_col == cloned_move.to_col
       end
     end
+
+    def board_score(color)
+      own = @board.pawns(color)
+
+      enemy = @board.pawns(opponent(color))
+
+      score = 0
+
+      own.each do |pawn|
+        score += 100
+
+        if color == :black
+          score += pawn.row * 20
+        else
+          score += (7 - pawn.row) * 20
+        end
+      end
+
+      enemy.each do |pawn|
+        score -= 100
+
+        if color == :black
+          score -= (7 - pawn.row) * 20
+        else
+          score -= pawn.row * 20
+        end
+      end
+
+      score
+    end
+
+    private
+
+    def opponent(color)
+      color == :white ? :black : :white
+    end
   end
 end
