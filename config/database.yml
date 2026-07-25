@@ -1,0 +1,47 @@
+# PostgreSQL.
+#   gem install pg
+#
+#   Ensure the pg gem is defined in your Gemfile
+#   gem "pg"
+#
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV.fetch("PAWN_CHESS_DB_HOST", "localhost") %>
+  username: <%= ENV.fetch("PAWN_CHESS_DB_USERNAME", "amritraj") %>
+  password: <%= ENV.fetch("PAWN_CHESS_DB_PASSWORD", "postgres") %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: test_pawn_development
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: test_pawn_test
+
+# Store production database credentials via environment variables so the
+# same config works across environments. Note: the solid_cache/solid_queue/
+# solid_cable sub-databases below still point at separate sqlite files from
+# the original Rails 8 template -- left as-is since they're outside the
+# scope of the core chess game and unused by it. Give them their own
+# Solid Cache/Queue/Cable in production.
+production:
+  primary:
+    <<: *default
+    database: test_pawn_production
+  cache:
+    adapter: sqlite3
+    database: storage/production_cache.sqlite3
+    migrations_paths: db/cache_migrate
+  queue:
+    adapter: sqlite3
+    database: storage/production_queue.sqlite3
+    migrations_paths: db/queue_migrate
+  cable:
+    adapter: sqlite3
+    database: storage/production_cable.sqlite3
+    migrations_paths: db/cable_migrate

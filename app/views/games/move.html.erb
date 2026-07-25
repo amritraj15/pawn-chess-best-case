@@ -1,0 +1,36 @@
+<h3>Make Move</h3>
+
+<%= form_with url: move_game_path(@game),
+              method: :post do |f| %>
+
+  <div>
+
+    From Row
+
+    <%= number_field_tag :from_row %>
+
+    From Col
+
+    <%= number_field_tag :from_col %>
+
+  </div>
+
+  <br>
+
+  <div>
+
+    To Row
+
+    <%= number_field_tag :to_row %>
+
+    To Col
+
+    <%= number_field_tag :to_col %>
+
+  </div>
+
+  <br>
+
+  <%= submit_tag "Move Pawn" %>
+
+<% end %>

@@ -1,0 +1,133 @@
+<h1>♟ Pawn Chess</h1>
+
+<p><strong>Game ID:</strong> <%= @game.id %></p>
+
+<p>
+  <strong>You:</strong> ♙ White
+
+<strong>Computer:</strong> ♟ Black
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @game.status.humanize %>
+</p>
+
+<p>
+  <strong>Current Turn:</strong>
+<% if @game.current_turn == "white" %>
+
+  <span style="color:green;">Your Turn (White ♙)</span>
+
+<% else %>
+
+  <span style="color:blue;">Computer's Turn (Black ♟)</span>
+
+<% end %>
+</p>
+
+<% if flash[:notice] %>
+  <div style="color:green; margin-bottom:10px;">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
+
+<% if flash[:alert] %>
+  <div style="color:red; margin-bottom:10px;">
+    <%= flash[:alert] %>
+  </div>
+<% end %>
+
+<table
+  style="
+    border-collapse: collapse;
+    border: 2px solid #333;
+    text-align:center;
+  ">
+
+  <tr>
+    <th style="width:40px;"></th>
+
+<% ("A".."H").each_with_index do |letter, index| %>
+  <th style="width:60px;height:40px;">
+    <%= letter %><br>
+    (<%= index %>)
+  </th>
+<% end %>
+  </tr>
+
+  <% (0..7).each do |row| %>
+    <tr>
+
+      <th><%= row %></th>
+
+      <% (0..7).each do |col| %>
+
+        <% pawn = @board.piece_at(row, col) %>
+
+        <% background =
+             (row + col).even? ? "#f0d9b5" : "#b58863" %>
+
+        <td
+          style="
+            width:60px;
+            height:60px;
+            background:<%= background %>;
+            font-size:34px;
+            font-weight:bold;
+          ">
+
+          <% if pawn %>
+            <%= pawn.color.to_sym == :black ? "♟" : "♙" %>
+          <% end %>
+
+        </td>
+
+      <% end %>
+
+    </tr>
+  <% end %>
+
+</table>
+
+<br>
+
+<% if @game.in_progress? && @game.current_turn == "white" %>
+
+  <h3>Make Your Move</h3>
+
+  <%= form_with url: move_game_path(@game), method: :post do %>
+
+    <p>
+      <%= label_tag :from_row %>
+      <%= number_field_tag :from_row, nil, min: 0, max: 7 %>
+
+      &nbsp;&nbsp;
+
+      <%= label_tag :from_col %>
+      <%= number_field_tag :from_col, nil, min: 0, max: 7 %>
+    </p>
+
+    <p>
+      <%= label_tag :to_row %>
+      <%= number_field_tag :to_row, nil, min: 0, max: 7 %>
+
+      &nbsp;&nbsp;
+
+      <%= label_tag :to_col %>
+      <%= number_field_tag :to_col, nil, min: 0, max: 7 %>
+    </p>
+
+    <%= submit_tag "Move Pawn" %>
+
+  <% end %>
+
+<% elsif @game.in_progress? %>
+
+  <h3>Computer is making its move...</h3>
+
+<% else %>
+
+  <h2>Game Over!</h2>
+
+<% end %>
